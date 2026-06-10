@@ -47,6 +47,51 @@ const M: Meta = {
     { title: '투명한 근거', body: '충족·미충족 조건을 그대로 노출해 블랙박스가 아닌, 검증 가능한 추천을 제공합니다.' },
     { title: '정적 배포', body: 'Vite + React + TS, GitHub Pages 자동 배포. 백엔드 없이 클라이언트에서 완결됩니다.' },
   ],
+  targets: ['자격 여부가 헷갈리는 청년', '여러 청년정책을 비교하려는 사람', '신청 우선순위를 정하려는 사람'],
+  goals: [
+    '프로필로 정책별 자격 매칭률을 투명하게 계산한다',
+    '충족·미충족 조건을 항목별로 공개한다',
+    'API 키가 없어도 규칙 엔진으로 완전히 동작하게 한다',
+  ],
+  scenarios: [
+    '소득·주거·고용·학적 프로필을 고르고 자격 진단을 받는다',
+    '정책별 매칭률과 충족/미충족 조건을 확인한다',
+    '(선택) AI로 추천 이유·신청 팁을 보강한다',
+  ],
+  screens: [
+    { name: '프로필 입력', desc: '나이·소득 구간·주거·고용/학적·관심 분야 선택' },
+    { name: '진단 결과', desc: '정책별 매칭률 게이지 + 충족/미충족 조건 + 분야 태그' },
+    { name: 'AI 추천 이유', desc: '(선택) 상위 정책의 추천 사유·신청 팁' },
+  ],
+  pipelineDetail: [
+    { step: '프로필 입력', detail: '나이·소득·주거·고용·학적·관심을 구조화한다.' },
+    { step: '규칙 평가', detail: '각 정책을 조건 술어(predicate) 배열로 정의해 프로필에 적용, 충족/미충족을 산출한다.' },
+    { step: '매칭률 계산', detail: '충족 조건 비율을 % 점수로 환산해 정렬한다.' },
+    { step: 'AI 보강(선택)', detail: '키가 있으면 상위 정책의 추천 이유·신청 팁을 생성한다.' },
+    { step: '시각화', detail: '매칭 게이지 + 조건 체크 + 분야 태그로 표시한다.' },
+    { step: '안내', detail: '우선순위 순으로 신청 가이드를 제공한다.' },
+  ],
+  promptNotes: [
+    '자격 판정은 규칙 엔진이 결정적으로 수행하고, AI는 설명·신청 팁만 보조해 역할을 분리한다.',
+    'system 프롬프트에 매칭 결과(충족/미충족 조건)를 넣어 근거에 맞는 추천 사유를 생성한다.',
+    'API 키가 없어도 규칙 엔진만으로 핵심 진단이 완전하게 동작한다.',
+  ],
+  architecture:
+    '백엔드 없는 React SPA. 공통 레이아웃·5탭은 src/ui.tsx, 진단 기능은 src/App.tsx가 담당한다. ' +
+    '자격 판정은 결정적 규칙 엔진(조건 술어)으로 App.tsx 안에서 계산하고, 설명·팁은 src/lib/ai.ts의 OpenAI 호출로 보강한다. 백엔드·DB 없이 완결된다.',
+  structure: [
+    { path: 'src/App.tsx', desc: '규칙 기반 자격 판정·매칭률·결과 + 메타(M)' },
+    { path: 'src/ui.tsx', desc: '공통 레이아웃·5탭·UI 헬퍼' },
+    { path: 'src/lib/ai.ts', desc: 'OpenAI chat 헬퍼(추천 이유·신청 팁)' },
+    { path: 'src/index.css', desc: '테마·게이지/태그 스타일' },
+  ],
+  dataModel: [
+    { name: 'Profile', desc: '나이·소득·주거·고용·학적·관심 등 사용자 프로필' },
+    { name: 'Cond', desc: '정책 자격 조건 술어(충족 여부 판정 단위)' },
+    { name: 'Policy / Result', desc: '정책 정의와 매칭률·충족/미충족 조건을 담은 진단 결과' },
+  ],
+  deploy:
+    'Vite 빌드(base: "./") 후 GitHub Actions(deploy.yml)가 main push 시 GitHub Pages로 자동 배포 → aebonlee.github.io/project06/',
   stack: ['React 18', 'TypeScript', 'Vite', 'Rule Engine', 'OpenAI GPT', 'localStorage'],
   links: [
     { label: '온라인청년센터', url: 'https://www.youthcenter.go.kr' },
