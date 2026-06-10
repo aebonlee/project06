@@ -92,6 +92,15 @@ const M: Meta = {
   ],
   deploy:
     'Vite 빌드(base: "./") 후 GitHub Actions(deploy.yml)가 main push 시 GitHub Pages로 자동 배포 → aebonlee.github.io/project06/',
+  scope: {
+    include: ['프로필 → 정책별 매칭률·충족/미충족 조건', '우선순위 안내·AI 추천 이유(선택)', '규칙 엔진 결정적 판정 + AI 설명 보조'],
+    exclude: ['실제 신청·연동', '연도별 예산·세부지침 자동 갱신', '로그인·저장 동기화'],
+  },
+  pitch: [
+    '"해당/비해당" 대신 매칭률(%)로 무엇을 더 갖추면 되는지 보여주는 점',
+    '판정(규칙)과 설명(AI)을 분리해 키 없이도 완전 동작',
+    '충족/미충족 조건을 투명 공개하는 화이트박스 방식',
+  ],
   stack: ['React 18', 'TypeScript', 'Vite', 'Rule Engine', 'OpenAI GPT', 'localStorage'],
   links: [
     { label: '온라인청년센터', url: 'https://www.youthcenter.go.kr' },
